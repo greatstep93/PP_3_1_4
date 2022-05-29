@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.demo.configs;
+package ru.greatstep.spring.boot_security.configs;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import ru.greatstep.spring.boot_security.models.Roles;
 
 @Configuration
 @EnableWebSecurity
@@ -37,13 +38,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
-        UserDetails user =
+        UserDetails admin =
                 User.withDefaultPasswordEncoder()
-                        .username("user")
-                        .password("user")
-                        .roles("USER")
+                        .username("admin")
+                        .password("admin")
+                        .roles(String.valueOf(Roles.ADMIN))
+                        .roles(String.valueOf(Roles.USER))
                         .build();
 
-        return new InMemoryUserDetailsManager(user);
+
+        return new InMemoryUserDetailsManager(admin);
     }
 }

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Create New User</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+</head>
+<body>
+
+<br/> <br/>
+
+
+<div align="center">
+    <div style="text-align: center;"><h3> Create New User </h3></div>
+
+    <form th:method="POST" th:action="@{/users}" th:object="${user}">
+
+
+        <label for="firstName">Enter name</label>
+        <input type="text" th:field="*{firstName}" id="firstName">
+
+        <label for="lastName">Enter Last Name</label>
+        <input type="text" th:field="*{lastName}" id="lastName">
+
+        <label for="email">Enter email</label>
+        <input type="text" th:field="*{email}" id="email">
+        <br/>
+        <br/>
+        <input type="submit" value="create"/>
+
+    </form>
+</div>
+
+</body>
+</html>
