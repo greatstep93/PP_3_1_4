@@ -8,8 +8,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import ru.greatstep.spring.boot_security.models.Roles;
 
 @Configuration
 @EnableWebSecurity
@@ -25,6 +26,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                 .antMatchers("/", "/index").permitAll()
+                .antMatchers("/users/**").hasRole("ADMIN")
+                .antMatchers("/user/**").hasAnyRole("ADMIN","USER")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin().successHandler(successUserHandler)
@@ -38,15 +41,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     @Override
     public UserDetailsService userDetailsService() {
+        UserDetails user =
+                User.withDefaultPasswordEncoder()
+                        .username("user")
+                        .password("user")
+                        .roles("USER")
+                        .build();
         UserDetails admin =
                 User.withDefaultPasswordEncoder()
                         .username("admin")
                         .password("admin")
-                        .roles(String.valueOf(Roles.ADMIN))
-                        .roles(String.valueOf(Roles.USER))
+                        .roles("ADMIN","USER")
                         .build();
 
-
-        return new InMemoryUserDetailsManager(admin);
+        return new InMemoryUserDetailsManager(admin,user);
     }
 }

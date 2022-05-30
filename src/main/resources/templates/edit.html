@@ -9,6 +9,7 @@
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <body>
+<a th:href="@{/logout}">Logout</a>
 <br/> <br/>
 
 
@@ -16,7 +17,7 @@
 
     <div style="text-align: center;"><h3> Edit User </h3></div>
 
-    <form th:method="PATCH" th:action="@{/users/{id}(id=${user.getId()})}" th:object="${user}">
+    <form th:method="PATCH" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}">
         <label for="firstName">Enter name</label>
         <input type="text" th:field="*{firstName}" id="firstName">
 

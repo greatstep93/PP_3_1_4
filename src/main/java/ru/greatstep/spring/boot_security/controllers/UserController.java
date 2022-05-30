@@ -11,7 +11,7 @@ import ru.greatstep.spring.boot_security.service.UserService;
 import java.util.List;
 
 @Controller
-@RequestMapping(value = "users")
+@RequestMapping(value = "/admin")
 public class UserController {
     private final UserService userService;
 
@@ -20,6 +20,11 @@ public class UserController {
         this.userService = userService;
     }
 
+
+//    @GetMapping()
+//    public String snowAdminPage(){
+//        return "/users";
+//    }
     @GetMapping()
     public String snowUserList(Model model) {
         List<User> userList = userService.listUsers();
@@ -27,7 +32,7 @@ public class UserController {
         return "users";
     }
 
-    @GetMapping("new")
+    @GetMapping("/new")
     public String newUser(Model model) {
         model.addAttribute("user", new User());
         return "new";
@@ -36,7 +41,7 @@ public class UserController {
     @PostMapping()
     public String create(@ModelAttribute("user") User user) {
         userService.add(user);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
     @GetMapping("/{id}/edit")
@@ -48,13 +53,13 @@ public class UserController {
     @PatchMapping("/{id}")
     public String update(@ModelAttribute("user") User user, @PathVariable("id") long id) {
         userService.update(id, user);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
     @DeleteMapping("/{id}")
     public String delete(@PathVariable("id") long id) {
         userService.removeUserById(id);
-        return "redirect:/users";
+        return "redirect:/admin";
     }
 
 

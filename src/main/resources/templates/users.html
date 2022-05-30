@@ -14,11 +14,11 @@
 <div style="text-align: center;"><h3> Users </h3></div>
 
 <hr>
-
+<a th:href="@{/logout}">Logout</a>
 <table class="table table-bordered table-striped">
     <thead class="thead-dark">
 
-    <th colspan="5"><a href="/users/new/">
+    <th colspan="5"><a href="/admin/new/">
         <center>Create New User</center>
     </a>
 
@@ -37,12 +37,12 @@
         <td th:text="${user.getLastName()}">emptyColor</td>
         <td th:text="${user.getEmail()}">emptyYear</td>
         <td>
-            <form th:method="GET" th:action="@{/users/{id}/edit(id=${user.getId()})}" th:object="${user}">
+            <form th:method="GET" th:action="@{/admin/{id}/edit(id=${user.getId()})}" th:object="${user}">
                 <input type="submit" value="UPDATE"/>
             </form>
         </td>
         <td>
-            <form th:method="DELETE" th:action="@{/users/{id}(id=${user.getId()})}" th:object="${user}">
+            <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}">
                 <input type="submit" value="DELETE"/>
             </form>
         </td>

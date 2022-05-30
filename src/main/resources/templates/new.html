@@ -9,14 +9,14 @@
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <body>
-
+<a th:href="@{/logout}">Logout</a>
 <br/> <br/>
 
 
 <div align="center">
     <div style="text-align: center;"><h3> Create New User </h3></div>
 
-    <form th:method="POST" th:action="@{/users}" th:object="${user}">
+    <form th:method="POST" th:action="@{/admin}" th:object="${user}">
 
 
         <label for="firstName">Enter name</label>
