@@ -9,7 +9,7 @@
           integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
 </head>
 <body>
-<a th:href="@{/logout}">Logout</a>
+<a th:href="@{/logout}" style="font-size: 150%">Logout</a>
 <br/> <br/>
 
 
@@ -26,6 +26,21 @@
 
         <label for="email">Enter email</label>
         <input type="text" th:field="*{email}" id="email">
+
+        <label for="userName">Enter login</label>
+        <input type="text" th:field="*{username}" id="userName">
+
+        <label for="password">Enter password</label>
+        <input type="text" th:field="*{password}" id="password">
+
+        <label>
+            <select size="3" name="role" id="roles" multiple="multiple">
+                <option disabled>Roles:</option>
+                <option value="ROLE_ADMIN">ADMIN</option>
+                <option selected value="ROLE_USER">USER</option>
+            </select>
+        </label>
+
         <br/>
         <br/>
         <input type="submit" value="update"/>
