@@ -47,15 +47,9 @@ public class AdminController {
     }
 
     @PostMapping()
-    public String create(@ModelAttribute("user") User user, @RequestParam (value = "role") String[] roles) {
+    public String create(@ModelAttribute("user") User user, @RequestParam(value = "role") String[] roles) {
 
-        ArrayList<Role> roleSet = new ArrayList<>();
-        for (String role:
-             roles) {
-
-            roleSet.add(new Role(role));
-        }
-
+        ArrayList<Role> roleSet = userService.getRoleCollectionToStringArray(roles);
         roleRepository.saveAll(roleSet);
         user.setRoles(roleSet);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -72,14 +66,9 @@ public class AdminController {
     }
 
     @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") long id, @RequestParam (value = "role") String[] roles) {
-        ArrayList<Role> roleSet = new ArrayList<>();
-        for (String role:
-                roles) {
+    public String update(@ModelAttribute("user") User user, @PathVariable("id") long id, @RequestParam(value = "role") String[] roles) {
 
-            roleSet.add(new Role(role));
-        }
-
+        ArrayList<Role> roleSet = userService.getRoleCollectionToStringArray(roles);
         roleRepository.saveAll(roleSet);
         user.setRoles(roleSet);
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));

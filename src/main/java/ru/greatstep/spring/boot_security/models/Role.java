@@ -1,6 +1,6 @@
 package ru.greatstep.spring.boot_security.models;
 
-import jdk.jfr.DataAmount;
+
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 
