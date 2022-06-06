@@ -1,67 +1,149 @@
 <!DOCTYPE html>
-<html lang="en">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Create New User</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <title>Spring Security Example</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
 </head>
-<body>
-<a th:href="@{/logout}" style="font-size: 150%">Logout</a>
-<br/> <br/>
+
+<body style="background-color: #f8f9fa">
+
+<!--Шапка-->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-dark bg-dark static-top">
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <a style="color: white;text-align: left;">
+                        <strong><th:block th:each="user:${activeUser}" th:text="${activeUser.getUsername()}"  ></th:block></strong>
+                        <th:block th:each="user:${activeUser}" th:text="'with roles: '+ ${activeUser.getRolesView}"  ></th:block></a>
+                    </a>
+                    <ul class="navbar-nav ml-md-auto">
+                        <li class="nav-item active">
+                            <a class="nav-link" href="/logout">Logout <span class="sr-only">(current)</span></a>
+                        </li>
+
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!--Левая панель-->
+
+    <br>
+    <div class="row">
+        <div class="col-md-2" style="background-color: white" >
+            <!--            <div class="h-100 d-inline-block" ></div>-->
+            <ul class="nav flex-column nav-pills" >
+                <li class="nav-item" >
+                    <a class="nav-link active" href="/admin">Admin</a>
+                </li>
+                <li class="nav flex-column nav-pills">
+                    <a class="nav-link " href="/user_admin">User</a>
+                </li>
+
+            </ul>
+        </div>
 
 
-<div align="center">
-    <div style="text-align: center;"><h3> Create New User </h3></div>
+        <!--Правая панель-->
+        <div class="col-md-10">
+            <!--Заголовок страницы-->
+            <div class="page-header">
+                <h2>
+                    Admin panel
+                </h2>
+            </div>
+            <!--Панель навигации-->
 
-    <form th:method="POST" th:action="@{/admin}" th:object="${user}" >
+            <ul class="nav nav-tabs">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/admin">Users table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="admin/new">New user</a>
+                </li>
+
+            </ul>
+
+            <!--            Заголовок таблицы-->
+
+            <table class="table table-hover-bordered" style="background-color: white">
+                <!--Шапка таблицы-->
+                <thead>
+                <tr>
+                <h5 style="margin: 10px">
+                    Add new user
+                </h5>
+                </tr>
+                </thead>
+                <tr>
+
+            <div align="center" style="background-color: white">
+
+                <form th:method="POST" th:action="@{/admin}" th:object="${newUser}" >
+                    <div class="col-3">
+                    <div class="form-group">
+
+                        <strong><label for="firstName">First Name</label></strong>
+                        <input type="text" th:field="*{firstName}" class="form-control" id="firstName" placeholder="Enter First name" required>
+
+                    </div>
+                    <div class="form-group">
+                        <strong> <label for="lastName">Last name</label> </strong>
+                        <input type="text" th:field="*{lastName}" class="form-control" id="lastName" placeholder="Enter Last name" required>
+                    </div>
+                    <div class="form-group">
+                        <strong><label for="age">Age</label> </strong>
+                        <input type="number" th:field="*{age}" class="form-control" id="age" placeholder="Enter Age" required>
+                    </div>
+
+                    <div class="form-group">
+                        <strong><label for="email">Email</label> </strong>
+                        <input type="email" th:field="*{username}" class="form-control" id="email" placeholder="Enter Email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <strong><label for="password">Password</label> </strong>
+                        <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Enter Password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <strong><label for="roles">Role</label> </strong>
+                        <select class="custom-select" size="3" multiple name="role" id="roles" required>
+                        <option value="ROLE_ADMIN">ADMIN</option>
+                        <option selected value="ROLE_USER">USER</option>
+                        </select>
+                    </div>
 
 
+                        <button type="submit" class="btn btn-success">Add new user</button>
+                    </div>
+                    <br>
+                </form>
 
+            </div>
+                </tr>
 
-        <label for="firstName">Enter name</label>
-        <input type="text" th:field="*{firstName}" id="firstName">
+            </table>
 
-        <label for="lastName">Enter Last Name</label>
-        <input type="text" th:field="*{lastName}" id="lastName">
-
-        <label for="email">Enter email</label>
-        <input type="text" th:field="*{email}" id="email">
-
-        <label for="userName">Enter login</label>
-        <input type="text" th:field="*{username}" id="userName">
-
-        <label for="password">Enter password</label>
-        <input type="text" th:field="*{password}" id="password">
-
-        <label>
-            <select size="3" name="role" id="roles" multiple="multiple">
-                <option disabled>Roles:</option>
-                <option value="ROLE_ADMIN">ADMIN</option>
-                <option selected value="ROLE_USER">USER</option>
-            </select>
-        </label>
-
-
-<!--        <label for="role">Enter role</label>-->
-<!--        <input th:field="${role}" type="text" id="role"></input>-->
-
-
-
-<!--        <p><strong>Please choice ROLES</strong></p>-->
-<!--        <p><select th:name="roles" multiple>-->
-<!--            <option th:value="s3">ROLES_ADMIN</option>-->
-<!--            <option th:value="s3">ROLES_USER</option>-->
-<!--        </select>-->
-
-        <br/>
-        <br/>
-        <input type="submit" value="create"/>
-
-    </form>
+        </div>
+    </div>
 </div>
-
 </body>
 </html>
+
+

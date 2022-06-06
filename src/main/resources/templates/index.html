@@ -1,20 +1,214 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
     <title>Spring Security Example</title>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+
+
 </head>
-<body>
-<br>
-<br>
-<div style="text-align: center;"><h1> Welcome to Home Page! </h1></div>
-<br>
-<br>
-<div style="text-align: center;"><h1> Please <a th:href="@{/login}">authority to continue</a>  </h1></div>
 
-<br>
-<br>
+<body style="background-color: #f8f9fa">
 
-<div style="text-align: center;"><h3> *Login and Password to default: "admin" </h3></div>
+<!--Шапка-->
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light navbar-dark bg-dark static-top">
+
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <a style="color: white;text-align: left;">
+                        <strong><th:block th:each="user:${user}" th:text="${user.getEmail()}"  ></th:block></strong>
+                        <th:block th:each="user:${user}" th:text="'with roles: '+ ${user.getRolesView}"  ></th:block></a>
+                    </a>
+
+                    <ul class="navbar-nav ml-md-auto">
+
+                        <li class="nav-item active">
+
+                            <a class="nav-link" href="/logout">Logout <span class="sr-only">(current)</span></a>
+                        </li>
+
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!--Левая панель-->
+
+    <br>
+    <div class="row">
+        <div class="col-md-2" style="background-color: white" >
+            <!--            <div class="h-100 d-inline-block" ></div>-->
+            <ul class="nav flex-column nav-pills" >
+                <li class="nav-item" >
+                    <a class="nav-link active" href="/admin">Admin</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user_admin">User</a>
+                </li>
+
+            </ul>
+        </div>
+
+
+        <!--Правая панель-->
+        <div class="col-md-10">
+            <!--Заголовок страницы-->
+            <div class="page-header">
+                <h2>
+                    Admin panel
+                </h2>
+            </div>
+            <!--Панель навигации-->
+
+            <ul class="nav nav-tabs">
+
+                <li class="nav-item">
+                    <a class="nav-link active" href="/">Users table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="admin/new">New user</a>
+                </li>
+
+            </ul>
+
+            <!--            Заголовок таблицы-->
+            <h5 style="margin: 10px">
+                All users
+            </h5>
+
+            <!--Таблица-->
+            <table class="table table-hover" style="background-color: white">
+                <!--Шапка таблицы-->
+                <thead>
+                <!--                <tr>-->
+                <!--                    <th colspan="8">All users</th>-->
+                <!--                </tr>-->
+                <tr>
+                    <th style="text-align: center;"> ID </th>
+                    <th style="text-align: center;"> First Name </th>
+                    <th style="text-align: center;"> Last Name </th>
+                    <th style="text-align: center;"> Age </th>
+                    <th style="text-align: center;"> Email</th>
+                    <th style="text-align: center;"> Role </th>
+                    <th style="text-align: center;"> Edit </th>
+                    <th style="text-align: center;"> Delete </th>
+                </tr>
+                </thead>
+                <!--Тело таблицы-->
+                <tbody>
+                <tr th:each="user:${users}">
+                    <td th:text="${user.getId()}" style="text-align: center;">ID </td>
+                    <td th:text="${user.getFirstName()}" style="text-align: center;"> Admin name </td>
+                    <td th:text="${user.getLastName()}" style="text-align: center;"> Admin LastName </td>
+                    <td th:text="${user.getAge()}" style="text-align: center;"> Admin age </td>
+                    <td th:text="${user.getEmail()}" style="text-align: center;"> Admin Email </td>
+                    <td th:text="${user.getRolesView()}" style="text-align: center;"> Role </td>
+
+                    <td style="text-align: center;">
+                        <form th:method="GET" th:action="@{/admin/{id}/edit(id=${user.getId()})}"
+                              th:object="${user}" style="text-align: center;">
+                            <button type="submit" class="btn btn-primary" value="UPDATE">Edit</button>
+                        </form> </td>
+
+
+                    <td style="text-align: center;">
+                        <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}" style="text-align: center;">
+                            <button type="submit" class="btn btn-danger" value="DELETE">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+            <a id="modal-203345" href="#modal-container-203345" role="button" class="btn btn-primary" data-toggle="modal">Edit</a>
+
+            <div class="modal fade" id="modal-container-203345" role="dialog" aria-labelledby="myModalLabel" aria-hidden="false">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="myModalLabel">
+                                Edit User Info
+                            </h5>
+                            <button type="button" class="close" data-dismiss="modal">
+                                <span aria-hidden="true">?</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <form th:method="PATCH" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}" style="text-align: center">
+                                <label for="firstName" style="text-align: center">Enter name</label>
+                                <br>
+                                <input type="text" th:field="*{firstName}" id="firstName">
+                                <br>
+                                <label for="lastName">Enter Last Name</label>
+                                <br>
+                                <input type="text" th:field="*{lastName}" id="lastName">
+                                <br>
+                                <label for="email">Enter email</label>
+                                <br>
+                                <input type="text" th:field="*{email}" id="email">
+                                <br>
+                                <label for="userName">Enter login</label>
+                                <br>
+                                <input type="text" th:field="*{username}" id="userName">
+                                <br>
+                                <label for="password">Enter password</label>
+                                <br>
+                                <input type="password" th:field="*{password}" id="password">
+                                <br>
+                                <label>
+                                    <!--                                    < multiple="multiple">-->
+                                    <!--                                        <option disabled>Roles:</option>-->
+                                    <!--                                        <option value="ROLE_ADMIN">ADMIN</option>-->
+                                    <!--                                        <option selected value="ROLE_USER">USER</option>-->
+                                    <!--                                    </select>-->
+                                    <label for="roles">Roles</label>
+                                    <select class="custom-select" multiple size="2"
+                                            name="role" id="roles" >
+
+                                        <option value="ROLE_ADMIN">ADMIN</option>
+                                        <option selected value="ROLE_USER">USER</option>
+                                    </select>
+                                </label>
+
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">
+                                        Save changes
+                                    </button>
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                        Close
+                                    </button>
+
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
 
 </body>
 </html>
+
+
+
+

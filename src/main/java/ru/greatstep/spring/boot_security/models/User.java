@@ -19,10 +19,9 @@ public class User implements UserDetails {
     public User() {
     }
 
-    public User(String firstName, String lastName, String email) {
+    public User(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = email;
     }
 
     @Id
@@ -30,8 +29,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, name = "userName")
-    private String username;
+
 
     @Column(name = "firstName")
     private String firstName;
@@ -39,11 +37,17 @@ public class User implements UserDetails {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(unique = true, name = "email")
-    private String email;
+//    @Column(unique = true, name = "email")
+//    private String email;
 
+    @Column(unique = true, name = "email")
+    private String username;
     @Column(name = "password")
     private String password;
+
+    @Column(name = "Age")
+
+    private int age;
 
 
     @ManyToMany
@@ -55,10 +59,14 @@ public class User implements UserDetails {
 
     public String getRolesView() {
         StringBuilder sb = new StringBuilder();
-        for (Role role : roles) { sb.append(role.getName());
-                                  sb.append("; ");}
+        for (Role role : roles) { sb.append(role.getName().substring(5));
+                                  sb.append(" ");}
         return sb.toString();
     }
+
+
+
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -101,7 +109,7 @@ public class User implements UserDetails {
         if (!Objects.equals(username, user.username)) return false;
         if (!Objects.equals(firstName, user.firstName)) return false;
         if (!Objects.equals(lastName, user.lastName)) return false;
-        if (!Objects.equals(email, user.email)) return false;
+//        if (!Objects.equals(email, user.email)) return false;
         if (!Objects.equals(password, user.password)) return false;
         return Objects.equals(roles, user.roles);
     }
@@ -112,7 +120,7 @@ public class User implements UserDetails {
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
+//        result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
         return result;
@@ -121,7 +129,7 @@ public class User implements UserDetails {
     @Override
     public String toString() {
         return "Id = " + id + "\n" + "First Name = " + firstName + "\n" + "Last Name = " + lastName
-                + "\n" + "Email = " + email + "\n";
+                + "\n" + "Email = " + "\n";
     }
 
 }

@@ -13,6 +13,7 @@ import ru.greatstep.spring.boot_security.repositories.UserRepository;
 import ru.greatstep.spring.boot_security.service.UserService;
 
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,17 +33,33 @@ public class AdminController {
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @GetMapping()
-    public String snowUserList(Model model) {
+    public String snowUserList(Model model,Principal principal) {
         List<User> userList = userRepository.findAll();
         model.addAttribute("users", userList);
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("activeUser",user);
+        model.addAttribute("newUser", new User());
+        model.addAttribute("user",user);
+
+
         return "admin";
     }
 
-    @GetMapping("/new")
-    public String newUser(Model model) {
+//    @GetMapping("/")
+//    public void showUserInfo(Model model,Principal principal){
+//        User user = userService.findByUsername(principal.getName());
+//
+//
+//    }
 
-        model.addAttribute("user", new User());
+    @GetMapping("/new")
+    public String newUser(Model model,Principal principal) {
+
+        model.addAttribute("newUser", new User());
         model.addAttribute("role", new ArrayList<Role>());
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("activeUser",user);
+
         return "new";
     }
 
@@ -59,19 +76,30 @@ public class AdminController {
         return "redirect:/admin";
     }
 
-    @GetMapping("/{id}/edit")
-    public String edit(Model model, @PathVariable("id") int id) {
+    @GetMapping("/{id}")
+    public String edit(Model model, @PathVariable("id") int id,Principal principal) {
         model.addAttribute("user", userRepository.findUserById((long) id));
-        return "edit";
+        User user = userService.findByUsername(principal.getName());
+
+        model.addAttribute("activeUser",user);
+        return "admin";
     }
 
-    @PatchMapping("/{id}")
-    public String update(@ModelAttribute("user") User user, @PathVariable("id") long id, @RequestParam(value = "role") String[] roles) {
+    @PostMapping("/{id}")
+    public String update(@ModelAttribute("user") User user,  @RequestParam(value = "role") String[] roles,
+                         Model model,@PathVariable("id") int id) {
 
+
+        model.addAttribute("user",userRepository.findUserById((long)id));
         ArrayList<Role> roleSet = userService.getRoleCollectionToStringArray(roles);
         roleRepository.saveAll(roleSet);
+        if(user.getPassword().equals("")){
+            user.setPassword(userRepository.findUserById(user.getId()).getPassword());
+        } else{
+            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        }
         user.setRoles(roleSet);
-        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+
         userRepository.saveAndFlush(user);
         return "redirect:/admin";
     }
