@@ -17,7 +17,7 @@ public class UserController {
     private UserService userService;
 
     @GetMapping()
-    public String snowUserList(Principal principal,Model model) {
+    public String snowActiveUserInfo(Principal principal,Model model) {
         User user = userService.findByUsername(principal.getName());
         model.addAttribute("activeUser",user);
         return "user";

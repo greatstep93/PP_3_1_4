@@ -33,32 +33,25 @@ public class AdminController {
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @GetMapping()
-    public String snowUserList(Model model,Principal principal) {
+    public String snowUserList(Model model, Principal principal) {
         List<User> userList = userRepository.findAll();
         model.addAttribute("users", userList);
         User user = userService.findByUsername(principal.getName());
-        model.addAttribute("activeUser",user);
+        model.addAttribute("activeUser", user);
         model.addAttribute("newUser", new User());
-        model.addAttribute("user",user);
 
 
         return "admin";
     }
 
-//    @GetMapping("/")
-//    public void showUserInfo(Model model,Principal principal){
-//        User user = userService.findByUsername(principal.getName());
-//
-//
-//    }
 
     @GetMapping("/new")
-    public String newUser(Model model,Principal principal) {
+    public String newUser(Model model, Principal principal) {
 
         model.addAttribute("newUser", new User());
         model.addAttribute("role", new ArrayList<Role>());
         User user = userService.findByUsername(principal.getName());
-        model.addAttribute("activeUser",user);
+        model.addAttribute("activeUser", user);
 
         return "new";
     }
@@ -77,25 +70,26 @@ public class AdminController {
     }
 
     @GetMapping("/{id}")
-    public String edit(Model model, @PathVariable("id") int id,Principal principal) {
+    public String edit(Model model, @PathVariable("id") int id, Principal principal) {
         model.addAttribute("user", userRepository.findUserById((long) id));
         User user = userService.findByUsername(principal.getName());
 
-        model.addAttribute("activeUser",user);
+        model.addAttribute("activeUser", user);
         return "admin";
     }
 
-    @PostMapping("/{id}")
-    public String update(@ModelAttribute("user") User user,  @RequestParam(value = "role") String[] roles,
-                         Model model,@PathVariable("id") int id) {
+    @PatchMapping("/user-update/{id}")
+    public String update(@ModelAttribute("user") User user, @RequestParam(value = "role") String[] roles,
+                         Model model, @PathVariable("id") int id) {
 
 
-        model.addAttribute("user",userRepository.findUserById((long)id));
+        model.addAttribute("user", userRepository.findUserById((long) id));
         ArrayList<Role> roleSet = userService.getRoleCollectionToStringArray(roles);
         roleRepository.saveAll(roleSet);
-        if(user.getPassword().equals("")){
-            user.setPassword(userRepository.findUserById(user.getId()).getPassword());
-        } else{
+        if (user.getPassword() == null ||
+                user.getPassword().equals("") || user.getPassword().equals(userRepository.findUserById((long) id).getPassword())) {
+            user.setPassword(userRepository.findUserById((long) id).getPassword());
+        } else {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
         user.setRoles(roleSet);
@@ -110,5 +104,11 @@ public class AdminController {
         return "redirect:/admin";
     }
 
+    @GetMapping("/info")
+    public String showActiveUserInfo(Principal principal, Model model) {
+        User user = userService.findByUsername(principal.getName());
+        model.addAttribute("activeUser", user);
+        return "admin_info";
+    }
 
 }

@@ -33,17 +33,13 @@
                         <strong>
                             <th:block th:each="user:${activeUser}" th:text="${activeUser.getUsername()}"></th:block>
                         </strong>
-                        <th:block th:each="user:${activeUser}" th:text="'with roles: '+ ${activeUser.getRolesView}"></th:block>
+                        <th:block th:each="user:${activeUser}"
+                                  th:text="'with roles: '+ ${activeUser.getRolesView}"></th:block>
                     </a>
-
-
                     <ul class="navbar-nav ml-md-auto">
-
                         <li class="nav-item active">
-
                             <a class="nav-link" href="/logout">Logout <span class="sr-only">(current)</span></a>
                         </li>
-
                     </ul>
                 </div>
             </nav>
@@ -54,13 +50,12 @@
     <br>
     <div class="row">
         <div class="col-md-2" style="background-color: white">
-            <!--            <div class="h-100 d-inline-block" ></div>-->
             <ul class="nav flex-column nav-pills">
                 <li class="nav-item">
                     <a class="nav-link active" href="/admin">Admin</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/user_admin">User</a>
+                    <a class="nav-link" href="/admin/info">User</a>
                 </li>
 
             </ul>
@@ -123,68 +118,91 @@
                     <!--Форма для изменения юзера-->
 
                     <td style="text-align: center">
-                    <button class="btn btn-info" data-toggle="modal" th:attr="data-target='#editModal'+${user.getId()}" >Edit</button>
-                        <div th:attr="id='editModal'+${user.getId()}"  class="modal fade">
+                        <button class="btn btn-info" data-toggle="modal"
+                                th:attr="data-target='#editModal'+${user.getId()}">Edit
+                        </button>
+                        <div th:attr="id='editModal'+${user.getId()}" class="modal fade">
                             <div class="modal-dialog">
-                                <div class="modal-content" >
+                                <div class="modal-content">
                                     <!--Шапка модального окна-->
                                     <div class="modal-header">
                                         <h4 class="modal-title">Edit user</h4>
-                                      <button class="close" data-dismiss="modal">x</button>
+                                        <button class="close" data-dismiss="modal">x</button>
                                     </div>
                                     <!---Тело модального окна-->
                                     <div align="center">
-                                    <form th:method="POST" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}"
-                                          style="text-align: center">
-                                    <div class="modal-body" align="center">Здесь будет форма
-                                        <div class="col-7">
-<!--                                            <div class="form-group">-->
+                                        <form th:method="PATCH"
+                                              th:action="@{admin/user-update/{id}(id=${user.getId()})}"
+                                              th:object="${user}">
+                                            <div class="modal-body" align="center">Здесь будет форма
+                                                <div class="col-7">
 
-<!--                                                <strong><label for="id">ID</label></strong>-->
-<!--                                                <input type="text" th:field="*{id}" class="form-control" id="id" readonly>-->
+                                                    <div class="form-group">
+                                                        <strong><label
+                                                                for="id">ID</label></strong>
+                                                        <input name="id" readonly
+                                                               type="number"
+                                                               th:value="${user.getId()}"
+                                                               id="id" placeholder="ID"
+                                                               class="form-control">
+                                                        <strong><label for="firstName">First
+                                                            name</label></strong>
+                                                        <input name="firstName"
+                                                               type="text"
+                                                               th:value="${user.getFirstName()}"
+                                                               id="firstName"
+                                                               placeholder="First name"
+                                                               class="form-control">
+                                                        <strong><label for="lastName">Last
+                                                            name</label></strong>
+                                                        <input name="lastName"
+                                                               type="text"
+                                                               th:value="${user.getLastName()}"
+                                                               id="lastName"
+                                                               placeholder="Last name"
+                                                               class="form-control">
+                                                        <strong><label for="age">Age
+                                                        </label> </strong>
+                                                        <input name="age"
+                                                               type="number"
+                                                               th:value="${user.getAge()}"
+                                                               class="form-control"
+                                                               id="age"
+                                                               placeholder="Enter Age" required>
+                                                        <strong><label
+                                                                for="username">Email</label></strong>
+                                                        <input name="username" type="text"
+                                                               th:value="${user.getUsername()}"
+                                                               id="username"
+                                                               placeholder="Email"
+                                                               class="form-control">
+                                                        <strong><label for="password">Password
+                                                        </label> </strong>
+                                                        <input name="password"
+                                                               type="password"
+                                                               th:value="${user.getPassword()}"
+                                                               class="form-control"
+                                                               id="password"
+                                                               placeholder="Enter Password">
+                                                        <strong><label for="roles">Role
+                                                        </label> </strong>
+                                                        <select class="custom-select"
+                                                                size="3"
+                                                                multiple name="role"
+                                                                id="roles" required>
+                                                            <option value="ROLE_ADMIN">ADMIN</option>
+                                                            <option selected value="ROLE_USER">USER</option>
+                                                        </select>
+                                                    </div>
 
-<!--                                            </div>-->
-                                            <div class="form-group">
-
-                                                <strong><label for="firstName">First Name</label></strong>
-                                                <input type="text" th:field="*{firstName}" class="form-control" id="firstName" placeholder="Enter First name" required>
-
+                                                </div>
+                                                <!---Подвал модального окна-->
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-danger" data-dismiss="modal">Close</button>
+                                                    <button class="btn btn-primary" type="submit">Edit</button>
+                                                </div>
                                             </div>
-                                            <div class="form-group">
-                                                <strong> <label for="lastName">Last name</label> </strong>
-                                                <input type="text" th:field="*{lastName}" class="form-control" id="lastName" placeholder="Enter Last name" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <strong><label for="age">Age</label> </strong>
-                                                <input type="number" th:field="*{age}" class="form-control" id="age" placeholder="Enter Age" required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <strong><label for="email">Email</label> </strong>
-                                                <input type="email" th:field="*{username}" class="form-control" id="email" placeholder="Enter Email" required>
-                                            </div>
-
-                                            <div class="form-group">
-                                                <strong><label for="password">Password</label> </strong>
-                                                <input type="password" th:field="*{password}" class="form-control" id="password" placeholder="Enter Password">
-                                            </div>
-
-                                            <div class="form-group">
-                                                <strong><label for="roles">Role</label> </strong>
-                                                <select class="custom-select" size="3" multiple name="role" id="roles" required>
-                                                    <option value="ROLE_ADMIN">ADMIN</option>
-                                                    <option selected value="ROLE_USER">USER</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    <!---Подвал модального окна-->
-                                    <div class="modal-footer">
-                                        <button class="btn btn-primary" type="submit">Edit</button>
-                                        <button class="btn btn-danger" data-dismiss="modal">Close</button>
-
-                                    </div>
-                                        </div>
-                                    </form>
+                                        </form>
                                     </div>
 
                                 </div>
@@ -192,39 +210,109 @@
                         </div>
 
 
-
                     </td>
 
 
+                    <!--Форма для удаления юзера-->
+                    <td style="text-align: center">
+                        <button class="btn btn-danger" data-toggle="modal"
+                                th:attr="data-target='#deleteModal'+${user.getId()}">Delete
+                        </button>
+                        <div th:attr="id='deleteModal'+${user.getId()}" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <!--Шапка модального окна-->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Delete user</h4>
+                                        <button class="close" data-dismiss="modal">x</button>
+                                    </div>
+                                    <!---Тело модального окна-->
+                                    <div align="center">
+                                        <form th:method="DELETE"
+                                              th:action="@{/admin/{id}(id=${user.getId()})}"
+                                              th:object="${user}">
+                                            <div class="modal-body" align="center">Здесь будет форма
+                                                <div class="col-7">
 
+                                                    <div class="form-group">
+                                                        <strong><label
+                                                                for="id">ID</label></strong>
+                                                        <input name="id" readonly
+                                                               type="number"
+                                                               th:value="${user.getId()}"
+                                                               id="id" placeholder="ID"
+                                                               class="form-control">
+                                                        <strong><label for="firstName">First
+                                                            name</label></strong>
+                                                        <input name="firstName" readonly
+                                                               type="text"
+                                                               th:value="${user.getFirstName()}"
+                                                               id="firstName"
+                                                               placeholder="First name"
+                                                               class="form-control">
+                                                        <strong><label for="lastName">Last
+                                                            name</label></strong>
+                                                        <input name="lastName" readonly
+                                                               type="text"
+                                                               th:value="${user.getLastName()}"
+                                                               id="lastName"
+                                                               placeholder="Last name"
+                                                               class="form-control">
+                                                        <strong><label for="age">Age
+                                                        </label> </strong>
+                                                        <input name="age" readonly
+                                                               type="number"
+                                                               th:value="${user.getAge()}"
+                                                               class="form-control"
+                                                               id="age"
+                                                               placeholder="Enter Age" required>
+                                                        <strong><label
+                                                                for="username">Email</label></strong>
+                                                        <input name="username" type="text" readonly
+                                                               th:value="${user.getUsername()}"
+                                                               id="username"
+                                                               placeholder="Email"
+                                                               class="form-control">
+                                                        <strong><label for="password">Password
+                                                        </label> </strong>
+                                                        <input name="password" readonly
+                                                               type="password"
+                                                               th:value="${user.getPassword()}"
+                                                               class="form-control"
+                                                               id="password"
+                                                               placeholder="Enter Password">
+                                                        <strong><label for="roles">Role readonly
+                                                        </label> </strong>
+                                                        <select class="custom-select" disabled
+                                                                size="3"
+                                                                multiple name="role"
+                                                                id="roles" required>
+                                                            <option value="ROLE_ADMIN">ADMIN</option>
+                                                            <option value="ROLE_USER">USER</option>
+                                                        </select>
+                                                    </div>
 
-                    <!--Кнопка для удаления юзера-->
-
-
-                    <td style="text-align: center;">
-                        <form th:method="DELETE" th:action="@{/admin/{id}(id=${user.getId()})}" th:object="${user}"
-                              style="text-align: center;">
-                            <button type="submit" class="btn btn-danger" value="DELETE">Delete</button>
-                        </form>
+                                                </div>
+                                                <!---Подвал модального окна-->
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-secondary" data-dismiss="modal">Close
+                                                    </button>
+                                                    <button class="btn btn-danger" type="submit" value="DELETE">Delete
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 </tr>
-
                 </tbody>
             </table>
-
-
-
         </div>
     </div>
 </div>
-
-
-
-
-
-
-
-
 
 
 </body>

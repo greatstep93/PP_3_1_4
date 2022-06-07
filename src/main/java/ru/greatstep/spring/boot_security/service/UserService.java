@@ -75,22 +75,6 @@ public class UserService implements UserDetailsService {
 
         userRepository.save(admin);
 
-        User user = new User("Anna","Trishkina");
-        user.setUsername("user@mail.ru");
-        user.setPassword("$2a$12$SOnZ9kd8ptoQbrTc6whqU.t/gtkmlJe3fNeWE6htnNmNgberD8I4S"); // admin
-        user.setAge(29);
-        List<Role> rolesList2 = new ArrayList<>();
-
-
-        Role roleTwo2 = new Role();
-        roleTwo2.setName("ROLE_ADMIN");
-        roleRepository.save(roleTwo2);
-        rolesList2.add(roleTwo2);
-
-
-        user.setRoles(rolesList2);
-
-        userRepository.save(user);
     }
 
 
