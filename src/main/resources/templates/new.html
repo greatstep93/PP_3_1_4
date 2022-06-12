@@ -27,9 +27,9 @@
 
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <a style="color: white;text-align: left;">
-                        <strong><th:block th:each="user:${activeUser}" th:text="${activeUser.getUsername()}"  ></th:block></strong>
+                        <b><th:block th:each="user:${activeUser}" th:text="${activeUser.getUsername()}"  ></th:block></b>
                         <th:block th:each="user:${activeUser}" th:text="'with roles: '+ ${activeUser.getRolesView}"  ></th:block></a>
-                    </a>
+
                     <ul class="navbar-nav ml-md-auto">
                         <li class="nav-item active">
                             <a class="nav-link" href="/logout">Logout <span class="sr-only">(current)</span></a>
@@ -45,7 +45,6 @@
     <br>
     <div class="row">
         <div class="col-md-2" style="background-color: white" >
-            <!--            <div class="h-100 d-inline-block" ></div>-->
             <ul class="nav flex-column nav-pills" >
                 <li class="nav-item" >
                     <a class="nav-link active" href="/admin">Admin</a>
@@ -74,7 +73,7 @@
                     <a class="nav-link" href="/admin">Users table</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="admin/new">New user</a>
+                    <a class="nav-link active" id="newUserButton">New user</a>
                 </li>
 
             </ul>
@@ -93,6 +92,8 @@
                 <tr>
 
             <div align="center" style="background-color: white">
+
+
 
                 <form th:method="POST" th:action="@{/admin}" th:object="${newUser}" >
                     <div class="col-3">
@@ -143,6 +144,7 @@
         </div>
     </div>
 </div>
+
 </body>
 </html>
 

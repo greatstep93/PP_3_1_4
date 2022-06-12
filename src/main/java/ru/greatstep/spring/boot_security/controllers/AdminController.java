@@ -15,35 +15,31 @@ import ru.greatstep.spring.boot_security.service.UserService;
 
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.List;
 
 @Controller
 @RequestMapping(value = "/admin")
 public class AdminController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
+    final
     UserRepository userRepository;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
-    @GetMapping()
-    public String snowUserList(Model model, Principal principal) {
-        List<User> userList = userRepository.findAll();
-        model.addAttribute("users", userList);
-        User user = userService.findByUsername(principal.getName());
-        model.addAttribute("activeUser", user);
-        model.addAttribute("newUser", new User());
-
-
-        return "admin";
+    @Autowired
+    public AdminController(UserService userService, RoleRepository roleRepository, UserRepository userRepository) {
+        this.userService = userService;
+        this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
     }
 
+    @GetMapping()
+    public String snowAdminPanel() {
+        return "admin";
+    }
 
     @GetMapping("/new")
     public String newUser(Model model, Principal principal) {
@@ -66,41 +62,6 @@ public class AdminController {
         userRepository.save(user);
 
 
-        return "redirect:/admin";
-    }
-
-    @GetMapping("/{id}")
-    public String edit(Model model, @PathVariable("id") int id, Principal principal) {
-        model.addAttribute("user", userRepository.findUserById((long) id));
-        User user = userService.findByUsername(principal.getName());
-
-        model.addAttribute("activeUser", user);
-        return "admin";
-    }
-
-    @PatchMapping("/user-update/{id}")
-    public String update(@ModelAttribute("user") User user, @RequestParam(value = "role") String[] roles,
-                         Model model, @PathVariable("id") int id) {
-
-
-        model.addAttribute("user", userRepository.findUserById((long) id));
-        ArrayList<Role> roleSet = userService.getRoleCollectionToStringArray(roles);
-        roleRepository.saveAll(roleSet);
-        if (user.getPassword() == null ||
-                user.getPassword().equals("") || user.getPassword().equals(userRepository.findUserById((long) id).getPassword())) {
-            user.setPassword(userRepository.findUserById((long) id).getPassword());
-        } else {
-            user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        }
-        user.setRoles(roleSet);
-
-        userRepository.saveAndFlush(user);
-        return "redirect:/admin";
-    }
-
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") long id) {
-        userRepository.deleteById(id);
         return "redirect:/admin";
     }
 

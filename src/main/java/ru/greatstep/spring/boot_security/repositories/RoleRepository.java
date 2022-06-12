@@ -7,5 +7,5 @@ import ru.greatstep.spring.boot_security.models.Role;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-
+    Role findRolesById(Long id);
 }

@@ -13,8 +13,11 @@ import java.security.Principal;
 @RequestMapping(value = "/user")
 public class UserController {
 
+    private final UserService userService;
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping()
     public String snowActiveUserInfo(Principal principal,Model model) {

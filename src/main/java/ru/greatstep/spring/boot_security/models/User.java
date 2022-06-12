@@ -106,7 +106,6 @@ public class User implements UserDetails {
         if (!Objects.equals(username, user.username)) return false;
         if (!Objects.equals(firstName, user.firstName)) return false;
         if (!Objects.equals(lastName, user.lastName)) return false;
-//        if (!Objects.equals(email, user.email)) return false;
         if (!Objects.equals(password, user.password)) return false;
         return Objects.equals(roles, user.roles);
     }
@@ -117,7 +116,6 @@ public class User implements UserDetails {
         result = 31 * result + (username != null ? username.hashCode() : 0);
         result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
-//        result = 31 * result + (email != null ? email.hashCode() : 0);
         result = 31 * result + (password != null ? password.hashCode() : 0);
         result = 31 * result + (roles != null ? roles.hashCode() : 0);
         return result;
