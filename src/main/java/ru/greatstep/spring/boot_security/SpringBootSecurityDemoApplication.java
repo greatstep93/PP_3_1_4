@@ -6,14 +6,14 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.filter.HiddenHttpMethodFilter;
-import ru.greatstep.spring.boot_security.service.UserService;
+import ru.greatstep.spring.boot_security.service.UserServiceImp;
 
 class BeanInitMethodImpl {
 
 	@Autowired
-	UserService userService;
+    UserServiceImp userServiceImp;
 	public void runAfterObjectCreated() {
-		userService.addDefaultAdmin();
+		userServiceImp.addDefaultAdmin();
 	}
 }
 

@@ -10,17 +10,17 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.greatstep.spring.boot_security.service.UserService;
+import ru.greatstep.spring.boot_security.service.UserServiceImp;
 
 @Configuration
 @EnableWebSecurity
 @ComponentScan("ru.greatstep.spring.boot_security")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private UserService userDetailService;
+    private UserServiceImp userDetailService;
 
     @Autowired
-    public void setUserDetailService(UserService userDetailService) {
+    public void setUserDetailService(UserServiceImp userDetailService) {
         this.userDetailService = userDetailService;
     }
 

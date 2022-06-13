@@ -1,81 +1,25 @@
 package ru.greatstep.spring.boot_security.service;
 
-import org.hibernate.Hibernate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import ru.greatstep.spring.boot_security.models.Role;
 import ru.greatstep.spring.boot_security.models.User;
-import ru.greatstep.spring.boot_security.repositories.RoleRepository;
-import ru.greatstep.spring.boot_security.repositories.UserRepository;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
-
-@Service
-public class UserService implements UserDetailsService {
-
-    private UserRepository userRepository;
-    private RoleRepository roleRepository;
-    @Autowired
-    public void setUserRepository(UserRepository userRepository) {this.userRepository = userRepository;}
-    @Autowired
-    public void setRoleRepository(RoleRepository roleRepository) {this.roleRepository = roleRepository;}
-
-    public User findByUsername(String username){
-        return userRepository.findByUsername(username);
-    }
-
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = findByUsername(username);
-        if(user == null){
-            throw new UsernameNotFoundException("User not found");
-        }
-        Hibernate.initialize(user.getAuthorities());
+public interface UserService {
 
 
-        return user;
-    }
+    List<User> findAll();
 
-    public ArrayList<Role> getRoleCollectionToStringArray(String[] roles) {
-        ArrayList<Role> roleArray = new ArrayList<>();
-        for (String role :
-                roles) {
+    User findByUsername(String username);
 
-            roleArray.add(new Role(role));
-        }
-        return roleArray;
-    }
+    User findUserById(long id);
 
-    public void addDefaultAdmin(){
-        User admin = new User("Dmitriy","Tkachenko");
-        admin.setUsername("admin@mail.ru");
-        admin.setPassword("$2a$12$SOnZ9kd8ptoQbrTc6whqU.t/gtkmlJe3fNeWE6htnNmNgberD8I4S"); // admin
-        admin.setAge(29);
-        List<Role> rolesList = new ArrayList<>();
+    void save(User user);
 
-        Role roleOne = new Role();
-        roleOne.setName("ROLE_ADMIN");
-        roleRepository.save(roleOne);
-        rolesList.add(roleOne);
+    void saveAndFlush(User user);
 
-        Role roleTwo = new Role();
-        roleTwo.setName("ROLE_USER");
-        roleRepository.save(roleTwo);
-        rolesList.add(roleTwo);
-
-
-        admin.setRoles(rolesList);
-
-        userRepository.save(admin);
-
-    }
+    void deleteById(long id);
 
 
 }

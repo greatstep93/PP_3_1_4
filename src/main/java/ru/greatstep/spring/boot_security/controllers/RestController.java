@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.greatstep.spring.boot_security.models.User;
 import ru.greatstep.spring.boot_security.repositories.RoleRepository;
 import ru.greatstep.spring.boot_security.repositories.UserRepository;
+import ru.greatstep.spring.boot_security.service.UserService;
 
 
 import java.security.Principal;
@@ -17,30 +18,30 @@ public class RestController {
 
     private final RoleRepository roleRepository;
 
-    final UserRepository userRepository;
+
+    private final UserService userService;
 
     BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
 
     @Autowired
-    public RestController(RoleRepository roleRepository, UserRepository userRepository) {
+    public RestController(RoleRepository roleRepository, UserService userService) {
         this.roleRepository = roleRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @GetMapping("/rest")
     public List<User> findAllUsers() {
-        List<User> userList = userRepository.findAll();
-        return userList;
+        return userService.findAll();
     }
 
     @GetMapping("/rest/principal")
     public User getPrincipalInfo(Principal principal) {
-        return userRepository.findByUsername(principal.getName());
+        return userService.findByUsername(principal.getName());
     }
 
     @GetMapping("/rest/{id}")
     public User findOneUser(@PathVariable long id) {
-        User user = userRepository.findUserById(id);
+        User user = userService.findUserById(id);
         return user;
     }
 
@@ -48,7 +49,7 @@ public class RestController {
     public User addNewUser(@RequestBody User user) {
         roleRepository.saveAll(user.getRoles());
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-        userRepository.save(user);
+        userService.save(user);
         return user;
     }
 
@@ -56,19 +57,19 @@ public class RestController {
     public User updateUser(@RequestBody User user, @PathVariable("id") long id) {
         roleRepository.saveAll(user.getRoles());
         if (user.getPassword() == null ||
-                user.getPassword().equals("") || user.getPassword().equals(userRepository.findUserById((long) id).getPassword())) {
-            user.setPassword(userRepository.findUserById((long) id).getPassword());
+                user.getPassword().equals("") || user.getPassword().equals(userService.findUserById((long) id).getPassword())) {
+            user.setPassword(userService.findUserById((long) id).getPassword());
         } else {
             user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         }
 
-        userRepository.saveAndFlush(user);
+        userService.saveAndFlush(user);
         return user;
     }
 
     @DeleteMapping("/rest/{id}")
     public void deleteUser(@PathVariable long id) {
-        userRepository.deleteById(id);
+        userService.deleteById(id);
     }
 
 }

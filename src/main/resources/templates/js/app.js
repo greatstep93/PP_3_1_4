@@ -2,6 +2,8 @@ $(async function () {
     await getTableWithUsers();
     getDefaultModal();
     getActiveUserInfo();
+    addNewUser();
+    getNewUserForm()
 })
 
 
@@ -12,6 +14,7 @@ const userFetchService = {
         'Referer': null
     },
     findAllUsers: async () => await fetch('rest'),
+    addNewUser: async (user) => await fetch('rest', {method: 'POST', headers: userFetchService.head, body: JSON.stringify(user)}),
     findOneUser: async (id) => await fetch(`rest/${id}`),
     getPrincipalInfo: async () => await fetch(`rest/principal`),
     updateUser: async (user, id) => await fetch(`rest/${id}`, {
@@ -82,30 +85,7 @@ async function getTableWithUsers() {
 }
 
 
-async function getDefaultModal() {
-    $('#someDefaultModal').modal({
-        keyboard: true,
-        backdrop: "static",
-        show: false
-    }).on("show.bs.modal", (event) => {
-        let thisModal = $(event.target);
-        let userid = thisModal.attr('data-userid');
-        let action = thisModal.attr('data-action');
-        switch (action) {
-            case 'edit':
-                editUser(thisModal, userid);
-                break;
-            case 'delete':
-                deleteUser(thisModal, userid);
-                break;
-        }
-    }).on("hidden.bs.modal", (e) => {
-        let thisModal = $(e.target);
-        thisModal.find('.modal-title').html('');
-        thisModal.find('.modal-body').html('');
-        thisModal.find('.modal-footer').html('');
-    })
-}
+
 
 
 async function editUser(modal, id) {
@@ -251,3 +231,89 @@ async function deleteUser(modal, id) {
         }
     })
 }
+
+async function getDefaultModal() {
+    $('#someDefaultModal').modal({
+        keyboard: true,
+        backdrop: "static",
+        show: false
+    }).on("show.bs.modal", (event) => {
+        let thisModal = $(event.target);
+        let userid = thisModal.attr('data-userid');
+        let action = thisModal.attr('data-action');
+        switch (action) {
+            case 'edit':
+                editUser(thisModal, userid);
+                break;
+            case 'delete':
+                deleteUser(thisModal, userid);
+                break;
+
+        }
+    }).on("hidden.bs.modal", (e) => {
+        let thisModal = $(e.target);
+        thisModal.find('.modal-title').html('');
+        thisModal.find('.modal-body').html('');
+        thisModal.find('.modal-footer').html('');
+    })
+}
+
+async function getNewUserForm() {
+    let button = $(`#SliderNewUserForm`);
+    let form = $(`#defaultSomeForm`)
+    button.on('click', () => {
+        if (form.attr("data-hidden") === "true") {
+            form.attr('data-hidden', 'false');
+            form.show();
+            button.text('Hide panel');
+        } else {
+            form.attr('data-hidden', 'true');
+            form.hide();
+            button.text('Show panel');
+        }
+    })
+}
+
+
+async function addNewUser() {
+    $('#addNewUserButton').click(async () =>  {
+        let addUserForm = $('#defaultSomeForm')
+        let firstName = addUserForm.find('#AddNewUserFirstName').val().trim();
+        let lastName = addUserForm.find('#AddNewUserLastName').val().trim();
+        let age = addUserForm.find('#AddNewUserAge').val().trim();
+        let username = addUserForm.find('#AddNewUserUsername').val().trim();
+        let password = addUserForm.find('#AddNewUserPassword').val().trim();
+        let roles = addUserForm.find('#AddNewUserRoles').val()
+        let data = {
+            firstName: firstName,
+            lastName: lastName,
+            age: age,
+            username: username,
+            password: password,
+            roles: roles
+        }
+        const response = await userFetchService.addNewUser(data);
+        if (response.ok) {
+            getTableWithUsers();
+            addUserForm.find('#AddNewUserFirstName').val('');
+            addUserForm.find('#AddNewUserLastName').val('');
+            addUserForm.find('#AddNewUserAge').val('');
+            addUserForm.find('#AddNewUserUsername').val('');
+            addUserForm.find('#AddNewUserPassword').val('');
+            addUserForm.find('#AddNewUserRoles').val('');
+
+
+        } else {
+            let body = await response.json();
+            let alert = `<div class="alert alert-danger alert-dismissible fade show col-12" role="alert" id="sharaBaraMessageError">
+                            ${body.info}
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>`;
+            addUserForm.prepend(alert)
+        }
+    })
+}
+
+

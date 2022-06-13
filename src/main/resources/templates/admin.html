@@ -75,8 +75,38 @@
                 <li class="nav-item" id="newUserLink">
 
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/new">New user</a>
+
+                <li class="nav nav-item" id="formNewUser">
+
+                        <a class="nav-link" type="button" id="SliderNewUserForm">New user</a>
+                   <div class="col-md-10" style="align-items: center">
+                    <div class="container-fluid" align="center">
+                        <div class="d-flex justify-content-center">
+                            <div class="form-group">
+                                <form id="defaultSomeForm" data-hidden=true style="display: none">
+                                    <h4>Add new User</h4>
+                                    <input  id="AddNewUserFirstName" type="text" placeholder="FirstName">
+                                    <input  id="AddNewUserLastName" type="text" placeholder="LastName">
+                                    <input class="form-control" id="AddNewUserAge" type="number" placeholder="age">
+                                    <input class="form-control" id="AddNewUserUsername" type="text" placeholder="Email">
+                                    <input class="form-control" id="AddNewUserPassword" type="password" placeholder="password">
+                                    <select class="custom-select"
+                                            size="3"
+                                            multiple name="roles"
+                                            id="AddNewUserRoles" required>
+                                        <option value="ROLE_ADMIN">ADMIN</option>
+                                        <option value="ROLE_USER">USER</option>
+                                    </select>
+                                    <br>
+
+                                    <button class="btn btn-primary mb-2" type="button" id="addNewUserButton">Add new user</button>
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div>
+</div>
                 </li>
 
             </ul>
@@ -136,6 +166,9 @@
         </div>
     </div>
 </div>
+
+
+
 
 <script src="js/app.js"></script>
 
